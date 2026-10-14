@@ -1,5 +1,20 @@
-import React from 'react';
 import { Activity, Clock, TrendingUp, Zap, CheckCircle, AlertTriangle } from 'lucide-react';
+const accuracyTextClasses: Record<string, string> = {
+  blue: 'text-blue-400',
+  teal: 'text-teal-400',
+  indigo: 'text-indigo-400',
+  amber: 'text-amber-400'
+};
+const accuracyBarClasses: Record<string, string> = {
+  blue: 'bg-blue-500',
+  teal: 'bg-teal-500',
+  indigo: 'bg-indigo-500',
+  amber: 'bg-amber-500'
+};
+const statusDotClasses: Record<string, string> = {
+  green: 'bg-green-500',
+  yellow: 'bg-yellow-500'
+};
 export function SecurityPerformanceSection() {
   return <section id="metrics" className="py-24 bg-slate-900 text-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -112,13 +127,13 @@ export function SecurityPerformanceSection() {
                       <span className="text-xs text-slate-500">
                         {agent.latency}
                       </span>
-                      <span className={`text-sm font-bold text-${agent.color}-400`}>
+                      <span className={`text-sm font-bold ${accuracyTextClasses[agent.color]}`}>
                         {agent.accuracy}%
                       </span>
                     </div>
                   </div>
                   <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
-                    <div className={`h-full bg-${agent.color}-500 rounded-full transition-all duration-500`} style={{
+                    <div className={`h-full ${accuracyBarClasses[agent.color]} rounded-full transition-all duration-500`} style={{
                   width: `${agent.accuracy}%`
                 }}></div>
                   </div>
@@ -157,7 +172,7 @@ export function SecurityPerformanceSection() {
               statusColor: 'yellow'
             }].map(item => <div key={item.service} className="flex items-center justify-between p-3 rounded-lg bg-slate-700/50">
                   <div className="flex items-center gap-3">
-                    <div className={`h-2 w-2 rounded-full bg-${item.statusColor}-500 ${item.statusColor === 'green' ? '' : 'animate-pulse'}`}></div>
+                    <div className={`h-2 w-2 rounded-full ${statusDotClasses[item.statusColor]} ${item.statusColor === 'green' ? '' : 'animate-pulse'}`}></div>
                     <span className="text-sm font-medium text-slate-200">
                       {item.service}
                     </span>

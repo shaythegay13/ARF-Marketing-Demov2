@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Monitor, Cpu, Brain, Gavel, Database, ChevronRight } from 'lucide-react';
 const layers = [{
   id: 1,

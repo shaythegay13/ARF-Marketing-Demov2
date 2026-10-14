@@ -1,4 +1,3 @@
-import React from 'react';
 import { ArrowRight, Layers, Activity, Shield } from 'lucide-react';
 export function Hero() {
   return <section className="relative overflow-hidden bg-slate-50 pt-16 pb-24 lg:pt-32">

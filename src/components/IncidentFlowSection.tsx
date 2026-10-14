@@ -1,4 +1,3 @@
-import React from 'react';
 import { AlertCircle, ArrowRight, CheckCircle2, FileText, Server, ShieldCheck, Scale } from 'lucide-react';
 const steps = [{
   title: 'Incoming Event',
