@@ -1,4 +1,3 @@
-import React from 'react';
 import { Users, Server, Cloud } from 'lucide-react';
 export function UseCasesSection() {
   const cases = [{

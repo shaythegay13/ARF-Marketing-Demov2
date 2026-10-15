@@ -1,5 +1,5 @@
-import React, { useState, Component } from 'react';
-import { Search, Stethoscope, TrendingUp, Terminal, Shield, Play, AlertCircle } from 'lucide-react';
+import { useState } from 'react';
+import { Search, Stethoscope, TrendingUp, Terminal, Shield, Play } from 'lucide-react';
 export function AgentsSection() {
   const [activeAgent, setActiveAgent] = useState<string | null>(null);
   const [agentOutputs, setAgentOutputs] = useState<{
@@ -33,6 +33,11 @@ export function AgentsSection() {
         }
       }, i * 800);
     });
+  };
+  const agentIconClasses: Record<string, string> = {
+    blue: 'bg-blue-50 text-blue-600',
+    teal: 'bg-teal-50 text-teal-600',
+    indigo: 'bg-indigo-50 text-indigo-600'
   };
   const agents = [{
     id: 'detective',
@@ -85,7 +90,7 @@ export function AgentsSection() {
           {agents.map(agent => <div key={agent.id} className="flex flex-col rounded-2xl border border-slate-200 bg-white shadow-sm">
               <div className="p-6">
                 <div className="mb-6 flex items-center justify-between">
-                  <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-${agent.color}-50 text-${agent.color}-600`}>
+                  <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${agentIconClasses[agent.color]}`}>
                     <agent.icon className="h-6 w-6" />
                   </div>
                   <button onClick={() => runAgent(agent.id)} disabled={activeAgent !== null} className={`flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${activeAgent === agent.id ? 'bg-slate-200 text-slate-500 cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-500'} disabled:opacity-50`}>

@@ -1,15 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import { Play, RotateCcw, Activity, Terminal, BarChart3, AlertTriangle, CheckCircle, FileText, Scale, DollarSign, Search } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Play, RotateCcw, Terminal, BarChart3, AlertTriangle, CheckCircle, FileText, Scale, DollarSign } from 'lucide-react';
+type DemoTab = 'reasoning' | 'metrics' | 'reports';
 export function DemoSection() {
   const [isSimulating, setIsSimulating] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
-  const [activeTab, setActiveTab] = useState<'reasoning' | 'metrics' | 'reports'>('reasoning');
+  const [activeTab, setActiveTab] = useState<DemoTab>('reasoning');
   const [policyStatus, setPolicyStatus] = useState<{
     rule: string;
     matched: boolean;
   }[]>([]);
   const [businessImpact, setBusinessImpact] = useState<string>('');
+  const timers = useRef<number[]>([]);
+  const clearTimers = () => {
+    timers.current.forEach(id => window.clearTimeout(id));
+    timers.current = [];
+  };
+  useEffect(() => {
+    return () => {
+      timers.current.forEach(id => window.clearTimeout(id));
+      timers.current = [];
+    };
+  }, []);
   const startSimulation = () => {
+    clearTimers();
     setIsSimulating(true);
     setLogs([]);
     setPolicyStatus([]);
@@ -78,12 +91,21 @@ export function DemoSection() {
       delay,
       action
     }) => {
-      setTimeout(() => {
-        setLogs(prev => [...prev, text]);
+      const id = window.setTimeout(() => {
+        const timestamp = new Date().toLocaleTimeString();
+        setLogs(prev => [...prev, `[${timestamp}] ${text}`]);
         if (action) action();
         if (text.includes('Revenue protected')) setIsSimulating(false);
       }, delay);
+      timers.current.push(id);
     });
+  };
+  const resetSimulation = () => {
+    clearTimers();
+    setIsSimulating(false);
+    setLogs([]);
+    setPolicyStatus([]);
+    setBusinessImpact('');
   };
   return <section id="demo" className="py-24 bg-slate-50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -116,11 +138,7 @@ export function DemoSection() {
                 <Play className="h-4 w-4" />
                 {isSimulating ? 'Simulating...' : 'Start Simulation'}
               </button>
-              <button onClick={() => {
-              setLogs([]);
-              setPolicyStatus([]);
-              setBusinessImpact('');
-            }} className="flex items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors">
+              <button onClick={resetSimulation} className="flex items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors">
                 <RotateCcw className="h-4 w-4" />
                 Reset
               </button>
@@ -206,18 +224,18 @@ export function DemoSection() {
               {/* Tabs */}
               <div className="flex border-b border-slate-800">
                 {[{
-                id: 'reasoning',
+                id: 'reasoning' as const,
                 icon: Terminal,
                 label: 'Agent Reasoning'
               }, {
-                id: 'metrics',
+                id: 'metrics' as const,
                 icon: BarChart3,
                 label: 'Metrics'
               }, {
-                id: 'reports',
+                id: 'reports' as const,
                 icon: FileText,
                 label: 'Reports'
-              }].map(tab => <button key={tab.id} onClick={() => setActiveTab(tab.id as any)} className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors ${activeTab === tab.id ? 'border-b-2 border-blue-500 bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'}`}>
+              }].map(tab => <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors ${activeTab === tab.id ? 'border-b-2 border-blue-500 bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'}`}>
                     <tab.icon className="h-4 w-4" />
                     {tab.label}
                   </button>)}
@@ -228,10 +246,7 @@ export function DemoSection() {
                 {activeTab === 'reasoning' && <div className="space-y-2">
                     {logs.length === 0 ? <div className="flex h-full items-center justify-center text-slate-600 pt-20">
                         Waiting for simulation to start...
-                      </div> : logs.map((log, i) => <div key={i} className="animate-in fade-in slide-in-from-left-2 duration-300">
-                          <span className="mr-2 text-slate-600">
-                            [{new Date().toLocaleTimeString()}]
-                          </span>
+                      </div> : logs.map((log, i) => <div key={i}>
                           {log}
                         </div>)}
                     {isSimulating && <div className="animate-pulse text-blue-400">_</div>}

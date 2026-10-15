@@ -1,4 +1,3 @@
-import React from 'react';
 import { Github, ShieldCheck } from 'lucide-react';
 export function Footer() {
   return <footer className="border-t border-slate-200 bg-slate-50 py-12">

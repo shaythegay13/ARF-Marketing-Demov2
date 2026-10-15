@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ShieldCheck, Menu, X } from 'lucide-react';
 export function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -13,7 +13,7 @@ export function Navigation() {
     href: '#flow'
   }, {
     name: 'Security',
-    href: '#security'
+    href: '#metrics'
   }, {
     name: 'Demo',
     href: '#demo'
